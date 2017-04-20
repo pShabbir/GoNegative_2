@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "62600012507",
+    "firebase_url": "https://gonegative2.firebaseio.com",
+    "project_id": "gonegative2",
+    "storage_bucket": "gonegative2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62600012507:android:041f3b54dc0b94b1",
+        "android_client_info": {
+          "package_name": "com.va.shabbirhussain.gonegative_2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62600012507-phplglkg11o3oi8lp9tetjmmu6t8af6a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.va.shabbirhussain.gonegative_2",
+            "certificate_hash": "d211ef8be2d640ef53518bba100b5ef3bdc96715"
+          }
+        },
+        {
+          "client_id": "62600012507-md1ler96l3epis3a2roen34fpp052frp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbijcXP6Kyr3GIiJSJq_Ron_mQCYIQ35c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62600012507-md1ler96l3epis3a2roen34fpp052frp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
