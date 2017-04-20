@@ -2,10 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.va.shabbirhussain.gonegative_2">
 
-    <uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,7 +20,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".StoryPage" />
-        <activity android:name=".CreatePost"></activity>
+        <activity android:name=".CreatePost" />
+        <activity android:name=".ProfilePage" />
+        <activity android:name=".BottomNavigation"></activity>
     </application>
 
 </manifest>

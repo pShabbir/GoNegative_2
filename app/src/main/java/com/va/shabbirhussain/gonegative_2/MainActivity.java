@@ -3,6 +3,7 @@ package com.va.shabbirhussain.gonegative_2;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,7 +40,17 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListner;
 
+    private FirebaseUser user;
+
     public boolean flag = true;
+
+    private DatabaseReference mDatabase;
+
+    private String uid,name,email;
+
+
+
+    User author;
 
 
     @Override
@@ -82,22 +95,10 @@ public class MainActivity extends AppCompatActivity {
         mAuthListner = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                 user = FirebaseAuth.getInstance().getCurrentUser();
                 if(firebaseAuth.getCurrentUser()!=null && flag){
-                    Intent i=new Intent(MainActivity.this,StoryPage.class);
-                    startActivity(i);
-                    String name = user.getDisplayName();
-                    String email = user.getEmail();
-                    String uid = user.getUid();
-                    Uri photoUrl = user.getPhotoUrl();
-                    SharedPreferences sharedpref = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-                    SharedPreferences.Editor editor = sharedpref.edit();
-                    editor.putString("name",name);
-                    editor.putString("email",email);
-                    editor.putString("pic",photoUrl.toString());
-                    editor.putString("uid",uid);
-                    editor.apply();
                     Toast.makeText(getApplicationContext(),"Kuch to gadbad hai daya",Toast.LENGTH_LONG).show();
+                    new userStoring().execute();
                     flag = false;
                     finish();
                 }
@@ -165,6 +166,72 @@ public class MainActivity extends AppCompatActivity {
                         // ...
                     }
                 });
+    }
+
+    class userStoring extends AsyncTask<Void,Void,Void>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+             name = user.getDisplayName();
+             email = user.getEmail();
+             uid = user.getUid();
+             Uri photoUrl = user.getPhotoUrl();
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("name",name);
+            editor.putString("email",email);
+            editor.putString("pic",photoUrl.toString());
+            editor.putString("uid",uid);
+            editor.apply();
+             author = new User(name, email,uid,photoUrl.toString());
+
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+
+           if(flag){
+
+
+               mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
+               mDatabase.child("users").child(uid).setValue(author);
+
+           }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Intent i=new Intent(MainActivity.this,BottomNavigation.class);
+            startActivity(i);
+            Toast.makeText(getApplicationContext(),"Kuch to gadbad hai daya",Toast.LENGTH_LONG).show();
+        }
+    }
+
+}
+
+class User {
+
+    public String username;
+    public String email;
+    public String udi;
+    public String urlToProfileImage;
+
+    public User() {
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
+    }
+
+    public User(String username, String email,String uid,String urlToProfileImage) {
+        this.username = username;
+        this.email = email;
+        this.udi = uid;
+        this.urlToProfileImage = urlToProfileImage;
     }
 
 }
