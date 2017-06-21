@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/storybg"
+    android:id="@+id/v"
     tools:context="com.va.shabbirhussain.gonegative_2.BottomNavigation">
+
 
     <FrameLayout
         android:id="@+id/frame_layout"
@@ -20,10 +23,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/white"
+        android:background="@android:color/transparent"
         app:menu="@menu/bottom_navigation_menu"/>
-        <!--app:itemIconTint="@color/nav_item_state_list"-->
-        <!--app:itemTextColor="@color/nav_item_state_list"-->
+
 
 
 </RelativeLayout>

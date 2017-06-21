@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                  user = FirebaseAuth.getInstance().getCurrentUser();
                 if(firebaseAuth.getCurrentUser()!=null && flag){
-                    Toast.makeText(getApplicationContext(),"Kuch to gadbad hai daya",Toast.LENGTH_LONG).show();
                     new userStoring().execute();
                     flag = false;
                     finish();
@@ -172,36 +171,28 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-             name = user.getDisplayName();
-             email = user.getEmail();
-             uid = user.getUid();
-             Uri photoUrl = user.getPhotoUrl();
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("name",name);
-            editor.putString("email",email);
-            editor.putString("pic",photoUrl.toString());
-            editor.putString("uid",uid);
-            editor.apply();
-             author = new User(name, email,uid,photoUrl.toString());
+                name = user.getDisplayName();
+                email = user.getEmail();
+                uid = user.getUid();
+                Uri photoUrl = user.getPhotoUrl();
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("name",name);
+                editor.putString("email",email);
+                editor.putString("pic",photoUrl.toString());
+                editor.putString("uid",uid);
+                editor.apply();
+                author = new User(name, email,uid,photoUrl.toString());
 
 
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-
-
            if(flag){
-
-
                mDatabase = FirebaseDatabase.getInstance().getReference();
-
-
                mDatabase.child("users").child(uid).setValue(author);
-
            }
-
             return null;
         }
 
@@ -213,7 +204,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Kuch to gadbad hai daya",Toast.LENGTH_LONG).show();
         }
     }
-
 }
 
 class User {
@@ -222,6 +212,7 @@ class User {
     public String email;
     public String udi;
     public String urlToProfileImage;
+
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -232,6 +223,7 @@ class User {
         this.email = email;
         this.udi = uid;
         this.urlToProfileImage = urlToProfileImage;
+//        this.likeTo = likeTo;
     }
 
 }

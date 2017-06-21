@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +50,8 @@ public class StoryPage extends Fragment {
     private List<Post> arr;
     private RecyclerView recyclerView;
     private PostAdapter mAdapter;
+    private ProgressBar progressBar;
+    private BottomNavigation bottomNavigation;
 
 
     @Override
@@ -55,8 +59,21 @@ public class StoryPage extends Fragment {
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.activity_story_page, container, false);
 
+        progressBar=(ProgressBar)view.findViewById(R.id.progressBar2);
+
         recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);
+        recyclerView.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+
         recyclerView.setHasFixedSize(true);
+
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                // do it
+
+            }
+        });
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("posts");
         ref.addListenerForSingleValueEvent(
@@ -65,7 +82,7 @@ public class StoryPage extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         //Get map of users in datasnapshot
                         collectPhoneNumbers((Map<String,Object>) dataSnapshot.getValue());
-
+                        mAdapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -132,22 +149,36 @@ public class StoryPage extends Fragment {
 
         mAdapter = new PostAdapter(arr);
         recyclerView.setAdapter(mAdapter);
+        progressBar.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
 
 
+        recyclerView.addOnItemTouchListener(new PostTouchListner(getContext(), recyclerView, new PostTouchListner.ClickListener() {
 
-//        recyclerView.addOnItemTouchListener(new PostTouchListner(getContext(), recyclerView, new PostTouchListner.ClickListener() {
-//            @Override
-//            public void onClick(View view, int position) {
-//               // Post movie = arr.get(position);
-//                Toast.makeText(getContext(), " is selected!", Toast.LENGTH_SHORT).show();
+
+            @Override
+            public void onClick(View view, int position) {
+               // Post movie = arr.get(position);
+//                Post p = arr.get(position);
+//                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("posts").child(p.getPostId()).child("likes");
 //
-//            }
-//
-//            @Override
-//            public void onLongClick(View view, int position) {
-//                Toast.makeText(getContext(), "This is long press", Toast.LENGTH_SHORT).show();
-//            }
-//        }));
+////                Toast.makeText(getContext(), " is selected!", Toast.LENGTH_SHORT).show();
+//                if(checkLikes)
+//                int li = Integer.parseInt(p.getLikes());
+//                li++;
+//                String s= String.valueOf(li);
+//                mDatabase.setValue(s);
+//                p.setLikes(s);
+//                TextView likes = (TextView)view.findViewById(R.id.likescount);
+//                likes.setText(s);
+
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+                Toast.makeText(getContext(), "This is long press", Toast.LENGTH_SHORT).show();
+            }
+        }));
 
 
 

@@ -79,7 +79,8 @@ public class CreatePost extends Fragment  {
             }
         });
 
-        FloatingActionButton button= (FloatingActionButton)view.findViewById(R.id.floatingActionButton);
+        Button button= (Button) view.findViewById(R.id.Submit);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -164,6 +165,7 @@ class Post{
     public String title;
     public String userID;
 
+
     public Post() {
 
     }
@@ -177,6 +179,7 @@ class Post{
         this.storyText = storyText;
         this.title=title;
         this.userID = userID;
+
     }
 
     public void setPostId(String postId) {
