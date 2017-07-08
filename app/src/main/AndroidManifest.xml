@@ -19,10 +19,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StoryPage" />
-        <activity android:name=".CreatePost" />
-        <activity android:name=".ProfilePage" />
-        <activity android:name=".BottomNavigation"></activity>
+        <!-- <activity android:name=".StoryPage" /> -->
+        <!-- <activity android:name=".CreatePost" /> -->
+        <!-- <activity android:name=".ProfilePage" /> -->
+        <activity android:name=".BottomNavigation" />
+        <activity android:name=".Chck"></activity>
     </application>
 
 </manifest>

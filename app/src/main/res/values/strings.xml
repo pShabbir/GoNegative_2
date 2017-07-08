@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">GoNegative_2</string>
 
+    <string-array name="location_array">
+            <item>Jagat Farm</item>
+            <item>Ram Phal Chowk</item>
+            <item>Commercial</item>
+        </string-array>
+
 </resources>
