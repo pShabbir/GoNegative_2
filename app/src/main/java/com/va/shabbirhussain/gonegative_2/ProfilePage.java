@@ -54,25 +54,10 @@ public class ProfilePage extends Fragment {
                 .error(R.drawable.logo1)
                 .into(imageV);
 
-        new ChangeProfile().execute();
 
         return view;
     }
 
-    class ChangeProfile extends AsyncTask<Void,Void,Void>{
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Toast.makeText(getContext(),"Hi",Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-//            Toast.makeText(getContext(),"Hello",Toast.LENGTH_LONG).show();
-
-            return null;
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

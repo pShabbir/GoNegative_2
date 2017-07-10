@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--Price-->
+    <item android:id="@+id/price"
+        android:title="Price"
+        android:showAsAction="ifRoom"
+        tools:ignore="AppCompatResource" >
+        <menu>
+            <group
+                android:checkableBehavior="single">
+                <item android:id="@+id/q1"
+                    android:title="less than 100"
+                    android:orderInCategory="100"
+                    android:showAsAction="never"
+                    tools:ignore="AppCompatResource" />
+
+                <item android:id="@+id/q2"
+                    android:title="100 to 200"
+                    android:orderInCategory="100"
+                    android:showAsAction="never"
+                    tools:ignore="AppCompatResource" />
+
+                <item android:id="@+id/q3"
+                    android:title="More than 200"
+                    android:orderInCategory="100"
+                    android:showAsAction="never"
+                    tools:ignore="AppCompatResource" />
+            </group>
+        </menu>
+    </item>
+    <!--Placce-->
+    <item android:id="@+id/place"
+        android:icon="@drawable/script"
+        android:title="Place" >
+        <menu>
+            <group
+                android:checkableBehavior="single">
+                <item android:id="@+id/p1"
+                    android:title="Jagat Farm"
+                    android:orderInCategory="100"
+                    android:showAsAction="never"
+                    tools:ignore="AppCompatResource" />
+
+                <item android:id="@+id/p2"
+                    android:title="Ram Phal Chowk"
+                    android:orderInCategory="100"
+                    android:showAsAction="never"
+                    tools:ignore="AppCompatResource" />
+
+                <item android:id="@+id/p3"
+                    android:title="Commercial"
+                    android:orderInCategory="100"
+                    android:showAsAction="never"
+                    tools:ignore="AppCompatResource" />
+            </group>
+        </menu>
+    </item>
+    <!--Veg or Non-Veg-->
+    <item
+        android:icon="@drawable/script"
+        android:title="Food Type" >
+        <menu>
+            <group
+                android:checkableBehavior="single">
+                <item android:id="@+id/veg"
+                    android:title="Veg"
+                    android:orderInCategory="100"
+                    android:showAsAction="never"
+                    tools:ignore="AppCompatResource" />
+
+                <item android:id="@+id/nonveg"
+                    android:title="Non-Veg"
+                    android:orderInCategory="100"
+                    android:showAsAction="never"
+                    tools:ignore="AppCompatResource" />
+
+            </group>
+        </menu>
+    </item>
+</menu>

@@ -6,10 +6,10 @@
         android:title="story"/>
     <item
         android:id="@+id/profile"
-        android:icon="@drawable/script"
+        android:icon="@drawable/avatar"
         android:title="Profile"/>
     <item
         android:id="@+id/create"
-        android:icon="@drawable/avatar"
+        android:icon="@drawable/write"
         android:title="Create"/>
 </menu>

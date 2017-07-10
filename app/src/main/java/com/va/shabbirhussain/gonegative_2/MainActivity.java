@@ -2,6 +2,7 @@ package com.va.shabbirhussain.gonegative_2;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -58,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getSupportActionBar().hide();
+
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/product.ttf");
+        TextView txt= (TextView)findViewById(R.id.craveBit);
+        txt.setTypeface(custom_font);
 
 
         googleSignIn = (SignInButton)findViewById(R.id.googleSignIn);
@@ -201,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(aVoid);
             Intent i=new Intent(MainActivity.this,BottomNavigation.class);
             startActivity(i);
-            Toast.makeText(getApplicationContext(),"Kuch to gadbad hai daya",Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(),"Kuch to gadbad hai daya",Toast.LENGTH_LONG).show();
         }
     }
 }

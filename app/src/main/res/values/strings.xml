@@ -1,10 +1,15 @@
 <resources>
-    <string name="app_name">GoNegative_2</string>
+    <string name="app_name">CraveBit</string>
+
+    <string name="intro">We don\'t post anything to anywhere.
+                        By signing in you agree with our Terms of Services
+                            and Privacy Policy.
+                        </string>
 
     <string-array name="location_array">
-            <item>Jagat Farm</item>
-            <item>Ram Phal Chowk</item>
-            <item>Commercial</item>
-        </string-array>
+        <item>Jagat Farm</item>
+        <item>Ram Phal Chowk</item>
+        <item>Commercial</item>
+    </string-array>
 
 </resources>

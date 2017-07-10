@@ -1,19 +1,26 @@
 package com.va.shabbirhussain.gonegative_2;
 
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Intent;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,11 +42,13 @@ public class StoryPage extends Fragment{
     private Button signOut;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListner;
-    private List<MyPost> arr;
+    private List<MyPost> arr,shadow;
     private RecyclerView recyclerView;
     private PostAdapter mAdapter;
     private ProgressBar progressBar;
     private BottomNavigation bottomNavigation;
+
+    private FragmentActivity myContext;
 
 
     @Override
@@ -56,6 +65,8 @@ public class StoryPage extends Fragment{
 
         recyclerView.setHasFixedSize(true);
 
+        setHasOptionsMenu(true);
+
 //        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
 //            @Override
 //            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
@@ -68,8 +79,33 @@ public class StoryPage extends Fragment{
 //            }
 //        });
 
+
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+
+
+                MyPost myPost = shadow.get(position);
+                Toast.makeText(getContext(),myPost.getDescription(),Toast.LENGTH_LONG).show();
+
+
+                FragmentManager fragmentManager = myContext.getFragmentManager();
+                DescriptionDialogue descriptionDialogue = new DescriptionDialogue();
+                Bundle f=new Bundle();
+                f.putString("desc",myPost.getDescription());
+                f.putString("uri",myPost.getPostImageUrl());
+                f.putString("cost",myPost.getPrice()+"");
+                f.putString("rating",myPost.getRating()+"");
+                f.putString("locality",myPost.getLocality());
+                f.putString("recom",myPost.getRecommendation());
+                descriptionDialogue.setArguments(f);
+                descriptionDialogue.show(fragmentManager,"This is PopTime");
+            }
+        });
+
+
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("posts");
-        ref.addListenerForSingleValueEvent(
+        ref.limitToLast(20).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -125,7 +161,7 @@ public class StoryPage extends Fragment{
 
         //ArrayList<String> phoneNumbers = new ArrayList<>();
         arr=new ArrayList<>();
-
+        shadow = new ArrayList<>();
         if(users == null){
 //            arr.add(new MyPost("qwerty","Unkknown",0,"qazxswedcvfrtb","Null","Null","Null",0,"Null","Null",
 //                    "Null"));
@@ -134,17 +170,6 @@ public class StoryPage extends Fragment{
         //iterate through each user, ignoring their UID
         for (Map.Entry<String, Object> entry : users.entrySet()){
 
-//            //Get user map
-//            Map singleUser = (Map) entry.getValue();
-//            //Get phone field and append to list
-//            String postId = (String) singleUser.get("postId");
-//            String author = (String) singleUser.get("author");
-//            String likes = (String) singleUser.get("likes");
-//            String postDate = (String) singleUser.get("postDate");
-//            String postImageUrl = (String) singleUser.get("postImageUrl");
-//            String storyText = (String) singleUser.get("description");
-//            String title = (String) singleUser.get("title");
-//            String userID = (String) singleUser.get("userID");
             //Get user map
             Map singleUser = (Map) entry.getValue();
             //Get phone field and append to list
@@ -160,6 +185,7 @@ public class StoryPage extends Fragment{
             String food_type = (String)singleUser.get("food_type");
             String recommendation = (String)singleUser.get("recommendation");
             arr.add(new MyPost(postId,author,price,postImageUrl,description,title,userID,rating,locality,food_type,recommendation));
+            shadow.add(new MyPost(postId,author,price,postImageUrl,description,title,userID,rating,locality,food_type,recommendation));
 
         }
 
@@ -174,40 +200,127 @@ public class StoryPage extends Fragment{
         recyclerView.setAdapter(mAdapter);
         progressBar.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
-
-
-        recyclerView.addOnItemTouchListener(new PostTouchListner(getContext(), recyclerView, new PostTouchListner.ClickListener() {
-
-
-            @Override
-            public void onClick(View view, int position) {
-                // Post movie = arr.get(position);
-//                Post p = arr.get(position);
-//                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("posts").child(p.getPostId()).child("likes");
-//
-////                Toast.makeText(getContext(), " is selected!", Toast.LENGTH_SHORT).show();
-//                if(checkLikes)
-//                int li = Integer.parseInt(p.getLikes());
-//                li++;
-//                String s= String.valueOf(li);
-//                mDatabase.setValue(s);
-//                p.setLikes(s);
-//                TextView likes = (TextView)view.findViewById(R.id.likescount);
-//                likes.setText(s);
-
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-                Toast.makeText(getContext(), "This is long press", Toast.LENGTH_SHORT).show();
-            }
-        }));
-
-
-
-
 //        System.out.println(phoneNumbers.toString());
         // Toast.makeText(getContext(),phoneNumbers.toString(),Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        myContext=(FragmentActivity) activity;
+        super.onAttach(activity);
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.filter_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.p1:
+                filter(item.getTitle().toString());
+//                Toast.makeText(getContext(),item.getTitle(),Toast.LENGTH_LONG).show();
+                break;
+            case R.id.p2:
+                filter(item.getTitle().toString());
+//                Toast.makeText(getContext(),item.getTitle(),Toast.LENGTH_LONG).show();
+                break;
+            case R.id.p3:
+                filter(item.getTitle().toString());
+//                Toast.makeText(getContext(),item.getTitle(),Toast.LENGTH_LONG).show();
+                break;
+            case R.id.veg:
+                filterFoodType(item.getTitle().toString());
+//                Toast.makeText(getContext(),item.getTitle(),Toast.LENGTH_LONG).show();
+                break;
+            case R.id.nonveg:
+                filterFoodType(item.getTitle().toString());
+//                Toast.makeText(getContext(),item.getTitle(),Toast.LENGTH_LONG).show();
+                break;
+            case R.id.q1:
+                filterPrice(0,100);
+//                Toast.makeText(getContext(),item.getTitle(),Toast.LENGTH_LONG).show();
+                break;
+            case R.id.q2:
+                filterPrice(100,200);
+//                Toast.makeText(getContext(),item.getTitle(),Toast.LENGTH_LONG).show();
+                break;
+            case R.id.q3:
+                filterPrice(200,1000);
+//                Toast.makeText(getContext(),item.getTitle(),Toast.LENGTH_LONG).show();
+                break;
+
+
+
+        }
+
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void filterPrice(int low,int high){
+        ArrayList<MyPost> arr2 = new ArrayList<>();
+        for(int i=0;i<arr.size();i++){
+            MyPost myPost=arr.get(i);
+            int price = myPost.getPrice();
+            if(price>low && price<=high )
+                arr2.add(myPost);
+        }
+
+        if(!arr2.isEmpty()){
+            shadow = arr2;
+            mAdapter = new PostAdapter(shadow);
+            recyclerView.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+
+        }else {
+            Toast.makeText(getContext(),"No such item exist",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void filterFoodType(String filter){
+        ArrayList<MyPost> arr2 = new ArrayList<>();
+        for(int i=0;i<arr.size();i++){
+            MyPost myPost=arr.get(i);
+            if(myPost.getFood_type().equalsIgnoreCase(filter))
+                arr2.add(myPost);
+        }
+
+        if(!arr2.isEmpty()){
+            shadow = arr2;
+            mAdapter = new PostAdapter(shadow);
+            recyclerView.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+
+        }else {
+            Toast.makeText(getContext(),"No such item exist",Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    public void filter(String filter){
+        ArrayList<MyPost> arr2 = new ArrayList<>();
+        for(int i=0;i<arr.size();i++){
+            MyPost myPost=arr.get(i);
+            if(myPost.getLocality().equalsIgnoreCase(filter))
+                arr2.add(myPost);
+        }
+
+        if(!arr2.isEmpty()){
+            shadow = arr2;
+            mAdapter = new PostAdapter(shadow);
+            recyclerView.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+
+        }else {
+            Toast.makeText(getContext(),"No such item exist",Toast.LENGTH_LONG).show();
+        }
+
     }
 }
 

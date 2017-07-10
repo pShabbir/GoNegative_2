@@ -1,18 +1,25 @@
 package com.va.shabbirhussain.gonegative_2;
 
+import android.*;
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +29,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RatingBar;
 import android.widget.Spinner;
@@ -36,6 +44,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
@@ -61,6 +70,7 @@ public class CreatePost extends Fragment  {
     String locality;
     String food_type="Veg";
     RadioButton radioButton,radioButton2;
+     ProgressBar progressBar;
 
     float myrating = 0;
 
@@ -75,6 +85,7 @@ public class CreatePost extends Fragment  {
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.activity_create_post, container, false);
 
+
         imageView = (ImageView)view.findViewById(R.id.image);
 
         txt = (TextView)view.findViewById(R.id.story);
@@ -82,6 +93,7 @@ public class CreatePost extends Fragment  {
         ratingBar = (RatingBar)view.findViewById(R.id.rating);
         price = (EditText)view.findViewById(R.id.price);
         recommendation = (EditText)view.findViewById(R.id.recommendation);
+        progressBar = (ProgressBar)view.findViewById(R.id.mProgress);
         radioButton = (RadioButton)view.findViewById(R.id.veg);
         radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -139,19 +151,9 @@ public class CreatePost extends Fragment  {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //new mySubmit().execute();
-                if(myFlag){
-                    Toast.makeText(getContext(),"This is post",Toast.LENGTH_LONG).show();
-                    mDatabase = database.getReference("posts").child(postId);
-                    storyText = txt.getText().toString();
-                    title = titletxt.getText().toString();
-                    myprice = Integer.parseInt(price.getText().toString());
-                    String recom = recommendation.getText().toString();
-                    MyPost post = new MyPost(postId,name,myprice,postImageUrl,storyText,title,userID,myrating,locality,food_type,recom);
-
-                    mDatabase.setValue(post);
-                }
-
+                //new mySubmit().execute()
+                    new Demo().execute();
+                    progressBar.setVisibility(View.VISIBLE);
             }
         });
 
@@ -173,11 +175,59 @@ public class CreatePost extends Fragment  {
         @Override
         protected Void doInBackground(Void... voids) {
 
+            //Posting image
+            imageView.setDrawingCacheEnabled(true);
+            imageView.buildDrawingCache();
+            Bitmap bitmap = imageView.getDrawingCache();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            Log.d("Shabbir",bitmap.getHeight()+"");
+            byte[] data = baos.toByteArray();
+
+            StorageReference storageRef = mStorage.getReference();
+            StorageReference riversRef = storageRef.child("images").child(userID).child(postId+".jpg");
+
+            UploadTask uploadTask = riversRef.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                    postImageUrl =""+ taskSnapshot.getDownloadUrl();
+
+                    mDatabase = database.getReference("posts").child(postId);
+                    storyText = txt.getText().toString();
+                    title = titletxt.getText().toString();
+                    myprice = Integer.parseInt(price.getText().toString());
+                    String recom = recommendation.getText().toString();
+                    MyPost post = new MyPost(postId,name,myprice,postImageUrl,storyText,title,userID,myrating,locality,food_type,recom);
+
+                    mDatabase.setValue(post);
+//                    onBackPressed();
+
+                }
+            });
+
+
+
 
 
             return null;
         }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressBar.setVisibility(View.INVISIBLE);
+            Toast.makeText(getContext(),"Posted",Toast.LENGTH_LONG).show();
+
+        }
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -198,46 +248,9 @@ public class CreatePost extends Fragment  {
         if(requestCode == GALLERY_INTENT && resultCode == RESULT_OK){
              uri = data.getData();
              imageView.setImageURI(uri);
-            StorageReference storageRef = mStorage.getReference();
-
-            StorageReference riversRef = storageRef.child("images").child(userID).child(postId+".jpg");
-
-            riversRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    downloadUrl = taskSnapshot.getDownloadUrl();
-                    postImageUrl = downloadUrl.toString();
-                    myFlag = true;
-                    Toast.makeText(getContext(),"This is done"+downloadUrl,Toast.LENGTH_LONG).show();
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getContext(),"This has failed",Toast.LENGTH_LONG).show();
-                }
-            });
         }
     }
 
-    public void onRadioButtonClicked(View view) {
-        // Is the button now checked?
-        boolean checked = ((RadioButton) view).isChecked();
-        RadioButton radioButton=(RadioButton)view.findViewById(R.id.veg);;
-        // Check which radio button was clicked
-        switch(view.getId()) {
-            case R.id.veg:
-                if (checked)
-                    // Pirates are the best
-                    food_type = "Veg";
-                    break;
-            case R.id.nonveg:
-                if (checked)
-                    // Ninjas rule
-                    food_type = "Non-Veg";
-                    break;
-        }
-    }
 }
 
 class MyPost {
