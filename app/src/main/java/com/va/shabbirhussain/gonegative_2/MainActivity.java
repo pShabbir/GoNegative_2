@@ -190,16 +190,17 @@ public class MainActivity extends AppCompatActivity {
                 editor.putString("uid",uid);
                 editor.apply();
                 author = new User(name, email,uid,photoUrl.toString());
-
+               mDatabase = FirebaseDatabase.getInstance().getReference();
+               mDatabase.child("users").child(uid).setValue(author);
 
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-           if(flag){
-               mDatabase = FirebaseDatabase.getInstance().getReference();
-               mDatabase.child("users").child(uid).setValue(author);
-           }
+//           if(flag){
+//               mDatabase = FirebaseDatabase.getInstance().getReference();
+//               mDatabase.child("users").child(uid).setValue(author);
+//           }
             return null;
         }
 
