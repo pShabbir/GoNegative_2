@@ -78,4 +78,9 @@
             </group>
         </menu>
     </item>
+    <item
+        android:title="Log Out"
+        android:id="@+id/logout"
+        android:showAsAction="never"
+        tools:ignore="AppCompatResource"/>
 </menu>

@@ -253,7 +253,9 @@ public class StoryPage extends Fragment{
                 filterPrice(200,1000);
 //                Toast.makeText(getContext(),item.getTitle(),Toast.LENGTH_LONG).show();
                 break;
-
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                break;
 
 
         }
