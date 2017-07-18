@@ -49,11 +49,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        public TextView comment;
+        public TextView comment,author;
 
         public MyViewHolder(View view){
             super(view);
             comment = (TextView)view.findViewById(R.id.comment);
+            author = (TextView)view.findViewById(R.id.author);
 
         }
     }
@@ -77,6 +78,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
 
         CommentClass post = postList.get(position);
         holder.comment.setText(post.getComment());
+        String name = post.getName();
+        holder.author.setText(name);
+
 
     }
 

@@ -7,9 +7,9 @@
                         </string>
 
     <string-array name="location_array">
-        <item>Jagat Farm</item>
-        <item>Ram Phal Chowk</item>
-        <item>Commercial</item>
+        <item>Delhi</item>
+        <item>Noida</item>
+        <item>Greater Noida</item>
     </string-array>
 
 </resources>

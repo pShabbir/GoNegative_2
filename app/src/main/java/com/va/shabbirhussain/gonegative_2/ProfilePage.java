@@ -40,7 +40,7 @@ public class ProfilePage extends Fragment {
 
 
     TextView nameV,emailV;
-    CircularImageView imageV;
+    ImageView imageV;
     private String uid;
     private FirebaseStorage mStorage;
 //    private ImageView imageViewForProfilePic;
@@ -58,7 +58,7 @@ public class ProfilePage extends Fragment {
         View view = inflater.inflate(R.layout.activity_profile_page, container, false);
         nameV= (TextView)view.findViewById(R.id.name);
         emailV = (TextView)view.findViewById(R.id.email);
-        imageV = (CircularImageView) view.findViewById(R.id.image);
+        imageV = (ImageView) view.findViewById(R.id.image);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         String name=sharedPreferences.getString("name","Error");
@@ -66,6 +66,7 @@ public class ProfilePage extends Fragment {
         String email=sharedPreferences.getString("email","Error");
         uid = sharedPreferences.getString("uid","Error");
         String image = sharedPreferences.getString("pic","Error");
+
 
         Picasso.with(getContext())
                 .load(sharedPreferences.getString("pic",""))

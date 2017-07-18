@@ -103,6 +103,12 @@
            android:layout_height="wrap_content"
            android:text="HHHHHHHH"
            />
+       <Button
+           android:onClick="takeMe"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="Take me there"
+           style="@style/MyButton"/>
        <RatingBar
            android:padding="2dp"
            android:layout_gravity="center"

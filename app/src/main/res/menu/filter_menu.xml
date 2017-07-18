@@ -37,19 +37,19 @@
             <group
                 android:checkableBehavior="single">
                 <item android:id="@+id/p1"
-                    android:title="Jagat Farm"
+                    android:title="Delhi"
                     android:orderInCategory="100"
                     android:showAsAction="never"
                     tools:ignore="AppCompatResource" />
 
                 <item android:id="@+id/p2"
-                    android:title="Ram Phal Chowk"
+                    android:title="Noida"
                     android:orderInCategory="100"
                     android:showAsAction="never"
                     tools:ignore="AppCompatResource" />
 
                 <item android:id="@+id/p3"
-                    android:title="Commercial"
+                    android:title="Greater Noida"
                     android:orderInCategory="100"
                     android:showAsAction="never"
                     tools:ignore="AppCompatResource" />

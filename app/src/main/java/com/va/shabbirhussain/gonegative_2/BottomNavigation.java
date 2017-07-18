@@ -35,6 +35,7 @@ public class BottomNavigation extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottom_navigation);
+//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         CheckUserPermsions();
 
     }
@@ -59,7 +60,7 @@ public class BottomNavigation extends AppCompatActivity {
                                 break;
                             case R.id.create:
                                 selectedFragment = CreatePost.newInstance();
-                                r.setBackground(getResources().getDrawable(R.mipmap.createbg));
+//                                r.setBackground(getResources().getDrawable(R.mipmap.createbg));
                                 getSupportActionBar().hide();
                                 break;
                             case R.id.profile:

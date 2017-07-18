@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -26,13 +27,15 @@ public class Chck extends AppCompatActivity {
     private RecyclerView recyclerView;
     private CommentAdapter mAdapter;
     private List<CommentClass> arr;
-    private String postid;
+    private String postid,author;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chck);
         Bundle bundle=getIntent().getExtras();
         postid = bundle.getString("postid");
+        author = bundle.getString("name");
 
         recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
         recyclerView.setVisibility(View.GONE);
@@ -75,6 +78,7 @@ public class Chck extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference  mDatabase = database.getReference("posts").child(postid).child("comments").child(uid);
         mDatabase.setValue(commentClass);
+        finish();
 
     }
     private void collectPhoneNumbers(Map<String,Object> users) {
@@ -97,7 +101,7 @@ public class Chck extends AppCompatActivity {
                 //Get phone field and append to list
                 String name = (String) singleUser.get("name");
                 String comment = (String) singleUser.get("comment");
-                Toast.makeText(this,comment,Toast.LENGTH_LONG).show();
+//                Toast.makeText(this,comment,Toast.LENGTH_LONG).show();
 
 //            String likes = (String) singleUser.get("likes");
 //            String postDate = (String) singleUser.get("postDate");

@@ -54,6 +54,7 @@ public class StoryPage extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         final View view =  inflater.inflate(R.layout.activity_story_page, container, false);
 
 
@@ -72,34 +73,55 @@ public class StoryPage extends Fragment{
 //            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
 ////                 do it
 //                Intent i = new Intent(getActivity(),Chck.class);
-//                Post a = arr.get(position);
+//                MyPost a = arr.get(position);
 //                i.putExtra("image",a.getPostImageUrl());
 //                i.putExtra("postid",a.getPostId());
 //                getActivity().startActivity(i);
 //            }
 //        });
 
+        ItemClickSupport.addTo(recyclerView).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+              //  Toast.makeText(getContext(),"This is long click",Toast.LENGTH_LONG).show();
+                Intent i = new Intent(getActivity(),Chck.class);
+                MyPost a = shadow.get(position);
+                i.putExtra("image",a.getPostImageUrl());
+                i.putExtra("postid",a.getPostId());
+                i.putExtra("name",a.getAuthor());
+                getActivity().startActivity(i);
+                return true;
+            }
+        });
 
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-
-
                 MyPost myPost = shadow.get(position);
-                Toast.makeText(getContext(),myPost.getDescription(),Toast.LENGTH_LONG).show();
+//                Toast.makeText(getContext(),myPost.getDescription(),Toast.LENGTH_LONG).show();
 
 
-                FragmentManager fragmentManager = myContext.getFragmentManager();
-                DescriptionDialogue descriptionDialogue = new DescriptionDialogue();
-                Bundle f=new Bundle();
-                f.putString("desc",myPost.getDescription());
-                f.putString("uri",myPost.getPostImageUrl());
-                f.putString("cost",myPost.getPrice()+"");
-                f.putString("rating",myPost.getRating()+"");
-                f.putString("locality",myPost.getLocality());
-                f.putString("recom",myPost.getRecommendation());
-                descriptionDialogue.setArguments(f);
-                descriptionDialogue.show(fragmentManager,"This is PopTime");
+                Intent i = new Intent(getActivity(),Description.class);
+                i.putExtra("desc",myPost.getDescription());
+                i.putExtra("uri",myPost.getPostImageUrl());
+                i.putExtra("cost",myPost.getPrice()+"");
+                i.putExtra("rating",myPost.getRating()+"");
+                i.putExtra("locality",myPost.getLocality()+"");
+                i.putExtra("recom",myPost.getRecommendation()+"");
+                i.putExtra("address",myPost.getAddress());
+                getActivity().startActivity(i);
+//
+//                FragmentManager fragmentManager = myContext.getFragmentManager();
+//                DescriptionDialogue descriptionDialogue = new DescriptionDialogue();
+//                Bundle f=new Bundle();
+//                f.putString("desc",myPost.getDescription());
+//                f.putString("uri",myPost.getPostImageUrl());
+//                f.putString("cost",myPost.getPrice()+"");
+//                f.putString("rating",myPost.getRating()+"");
+//                f.putString("locality",myPost.getLocality());
+//                f.putString("recom",myPost.getRecommendation());
+//                descriptionDialogue.setArguments(f);
+//                descriptionDialogue.show(fragmentManager,"This is PopTime");
             }
         });
 
@@ -128,7 +150,7 @@ public class StoryPage extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_story_page);
-      //  FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -137,8 +159,8 @@ public class StoryPage extends Fragment{
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                if(firebaseAuth.getCurrentUser()==null){
-                   Intent i=new Intent(getContext(),MainActivity.class);
-                   startActivity(i);
+//                   Intent i=new Intent(getContext(),MainActivity.class);
+//                   startActivity(i);
                    //finish();
                }
             }
@@ -184,8 +206,9 @@ public class StoryPage extends Fragment{
             String locality = (String)singleUser.get("locality");
             String food_type = (String)singleUser.get("food_type");
             String recommendation = (String)singleUser.get("recommendation");
-            arr.add(new MyPost(postId,author,price,postImageUrl,description,title,userID,rating,locality,food_type,recommendation));
-            shadow.add(new MyPost(postId,author,price,postImageUrl,description,title,userID,rating,locality,food_type,recommendation));
+            String loc = (String)singleUser.get("address");
+            arr.add(new MyPost(postId,author,price,postImageUrl,description,title,userID,rating,locality,food_type,recommendation,loc));
+            shadow.add(new MyPost(postId,author,price,postImageUrl,description,title,userID,rating,locality,food_type,recommendation,loc));
 
         }
 
@@ -208,6 +231,7 @@ public class StoryPage extends Fragment{
     public void onAttach(Activity activity) {
         myContext=(FragmentActivity) activity;
         super.onAttach(activity);
+
     }
 
 
@@ -255,6 +279,9 @@ public class StoryPage extends Fragment{
                 break;
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
+                Intent i=new Intent(getContext(),MainActivity.class);
+                startActivity(i);
+                getActivity().finish();
                 break;
 
 

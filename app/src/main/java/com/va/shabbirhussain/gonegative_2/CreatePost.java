@@ -2,6 +2,7 @@ package com.va.shabbirhussain.gonegative_2;
 
 import android.*;
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -14,6 +15,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -66,15 +69,18 @@ public class CreatePost extends Fragment  {
     private TextView txt,titletxt;
     private boolean myFlag = false;
     private RatingBar ratingBar;
-    private EditText price,recommendation;
+    private EditText price,recommendation,address;
     private int myprice;
     private Spinner spinner;
-    String locality;
+    String locality,recom,myAddress;
     String food_type="Veg";
     RadioButton radioButton,radioButton2;
-     ProgressBar progressBar;
-
+    ProgressBar progressBar;
     float myrating = 0;
+    private FragmentActivity myContext;
+
+    //
+
 
     public static CreatePost newInstance() {
         CreatePost fragment = new CreatePost();
@@ -95,6 +101,7 @@ public class CreatePost extends Fragment  {
         ratingBar = (RatingBar)view.findViewById(R.id.rating);
         price = (EditText)view.findViewById(R.id.price);
         recommendation = (EditText)view.findViewById(R.id.recommendation);
+        address =(EditText)view.findViewById(R.id.address);
         progressBar = (ProgressBar)view.findViewById(R.id.mProgress);
         radioButton = (RadioButton)view.findViewById(R.id.veg);
         radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -178,6 +185,17 @@ public class CreatePost extends Fragment  {
     class Demo extends AsyncTask<Void,Void,Void>{
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            storyText = txt.getText().toString();
+            title = titletxt.getText().toString();
+            myprice = Integer.parseInt(price.getText().toString());
+            recom = recommendation.getText().toString();
+            myAddress = address.getText().toString();
+
+        }
+
+        @Override
         protected Void doInBackground(Void... voids) {
 
             //Posting image
@@ -205,13 +223,28 @@ public class CreatePost extends Fragment  {
                     postImageUrl =""+ taskSnapshot.getDownloadUrl();
 
                     mDatabase = database.getReference("posts").child(postId);
-                    storyText = txt.getText().toString();
-                    title = titletxt.getText().toString();
-                    myprice = Integer.parseInt(price.getText().toString());
-                    String recom = recommendation.getText().toString();
-                    MyPost post = new MyPost(postId,name,myprice,postImageUrl,storyText,title,userID,myrating,locality,food_type,recom);
+//                    storyText = txt.getText().toString();
+//                    title = titletxt.getText().toString();
+//                    myprice = Integer.parseInt(price.getText().toString());
+//                    recom = recommendation.getText().toString();
+                    MyPost post = new MyPost(postId,name,myprice,postImageUrl,storyText,title,userID,myrating,locality,food_type,recom,myAddress);
 
                     mDatabase.setValue(post);
+
+
+
+
+
+
+//                    imageView.setImageResource(R.mipmap.picholder);
+//
+//
+//                    titletxt.setHint("Write your story here");
+//                    txt.setHint("Give it a nice title");
+//                    price.setHint("Enter the price");
+//                    recommendation.setHint("Write your Recommendation here");
+//                    ratingBar.setRating(0);
+//
 //                    onBackPressed();
 
                 }
@@ -228,7 +261,12 @@ public class CreatePost extends Fragment  {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             progressBar.setVisibility(View.INVISIBLE);
+            Fragment selectedFragment = CreatePost.newInstance();
+            FragmentTransaction transaction = myContext.getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_layout,selectedFragment);
+            transaction.commit();
             Toast.makeText(getContext(),"Posted",Toast.LENGTH_LONG).show();
+
 
         }
     }
@@ -269,6 +307,12 @@ public class CreatePost extends Fragment  {
         }
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        myContext=(FragmentActivity) activity;
+        super.onAttach(activity);
+    }
+
 }
 
 class MyPost {
@@ -283,6 +327,12 @@ class MyPost {
     public String locality;
     public String food_type;
     public String recommendation;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String address;
 
     public String getRecommendation() {
         return recommendation;
@@ -321,9 +371,12 @@ class MyPost {
         return rating;
     }
 
+    public String getPostId() {
+        return postId;
+    }
 
-    public MyPost(String postId, String author, int price, String postImageUrl, String description, String title, String userID, Object rating,String locality
-        ,String food_type,String recommendation) {
+    public MyPost(String postId, String author, int price, String postImageUrl, String description, String title, String userID, Object rating, String locality
+        , String food_type, String recommendation,String address) {
         this.postId = postId;
         this.author = author;
         this.price = price;
@@ -335,5 +388,6 @@ class MyPost {
         this.locality=locality;
         this.food_type = food_type;
         this.recommendation = recommendation;
+        this.address=address;
     }
 }
