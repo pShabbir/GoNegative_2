@@ -48,5 +48,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.google.firebase:firebase-messaging:10.2.1'
     compile 'com.theartofdev.edmodo:android-image-cropper:2.4.+'
+
+    compile 'com.doodle.android:android-material-chips:1.2.0'
 }
 apply plugin: 'com.google.gms.google-services'

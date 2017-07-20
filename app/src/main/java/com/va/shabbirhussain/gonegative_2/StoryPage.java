@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
@@ -23,6 +24,8 @@ import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.doodle.android.chips.ChipsView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -67,7 +70,6 @@ public class StoryPage extends Fragment{
         recyclerView.setHasFixedSize(true);
 
         setHasOptionsMenu(true);
-
 //        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
 //            @Override
 //            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
@@ -89,6 +91,7 @@ public class StoryPage extends Fragment{
                 i.putExtra("image",a.getPostImageUrl());
                 i.putExtra("postid",a.getPostId());
                 i.putExtra("name",a.getAuthor());
+                i.putExtra("sloc",a.getSloc());
                 getActivity().startActivity(i);
                 return true;
             }
@@ -207,8 +210,9 @@ public class StoryPage extends Fragment{
             String food_type = (String)singleUser.get("food_type");
             String recommendation = (String)singleUser.get("recommendation");
             String loc = (String)singleUser.get("address");
-            arr.add(new MyPost(postId,author,price,postImageUrl,description,title,userID,rating,locality,food_type,recommendation,loc));
-            shadow.add(new MyPost(postId,author,price,postImageUrl,description,title,userID,rating,locality,food_type,recommendation,loc));
+            String sloc = (String)singleUser.get("sloc");
+            arr.add(new MyPost(postId,author,price,postImageUrl,description,title,userID,rating,locality,food_type,recommendation,loc,sloc));
+            shadow.add(new MyPost(postId,author,price,postImageUrl,description,title,userID,rating,locality,food_type,recommendation,loc,sloc));
 
         }
 
@@ -303,6 +307,7 @@ public class StoryPage extends Fragment{
 
         if(!arr2.isEmpty()){
             shadow = arr2;
+            arr=arr2;
             mAdapter = new PostAdapter(shadow);
             recyclerView.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();
@@ -313,6 +318,7 @@ public class StoryPage extends Fragment{
     }
 
     public void filterFoodType(String filter){
+
         ArrayList<MyPost> arr2 = new ArrayList<>();
         for(int i=0;i<arr.size();i++){
             MyPost myPost=arr.get(i);
@@ -322,6 +328,7 @@ public class StoryPage extends Fragment{
 
         if(!arr2.isEmpty()){
             shadow = arr2;
+            arr=arr2;
             mAdapter = new PostAdapter(shadow);
             recyclerView.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();
@@ -342,6 +349,7 @@ public class StoryPage extends Fragment{
 
         if(!arr2.isEmpty()){
             shadow = arr2;
+            arr=arr2;
             mAdapter = new PostAdapter(shadow);
             recyclerView.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();

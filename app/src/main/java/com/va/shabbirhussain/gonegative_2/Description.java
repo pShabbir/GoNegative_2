@@ -38,6 +38,8 @@ public class Description extends AppCompatActivity {
 
         String r= b.getString("recom");
 
+        String sloc=b.getString("sloc");
+
         address =b.getString("address");
 
         if(address==null)

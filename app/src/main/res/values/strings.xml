@@ -10,6 +10,34 @@
         <item>Delhi</item>
         <item>Noida</item>
         <item>Greater Noida</item>
+        <item>Other</item>
     </string-array>
+
+    <string-array name="Delhi_L">
+        <item>North Delhi</item>
+        <item>East Delhi</item>
+        <item>West Delhi</item>
+        <item>South Delhi</item>
+        <item>Central Delhi</item>
+        <item>Other</item>
+    </string-array>
+    <string-array name="Other">
+        <item>None</item>
+    </string-array>
+
+    <string-array name="Noida_L">
+        <item>Sector 12</item>
+        <item>Bharamputra Market</item>
+        <item>Atta Market</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="GNoida_L">
+        <item>Jagat Farm</item>
+        <item>Commercial</item>
+        <item>Ram Pur</item>
+        <item>Other</item>
+    </string-array>
+
 
 </resources>

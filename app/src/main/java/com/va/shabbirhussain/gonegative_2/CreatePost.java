@@ -71,15 +71,16 @@ public class CreatePost extends Fragment  {
     private RatingBar ratingBar;
     private EditText price,recommendation,address;
     private int myprice;
-    private Spinner spinner;
-    String locality,recom,myAddress;
+    private Spinner spinner,subLocality;
+    String locality,recom,myAddress,sloc;
     String food_type="Veg";
     RadioButton radioButton,radioButton2;
     ProgressBar progressBar;
     float myrating = 0;
     private FragmentActivity myContext;
 
-    //
+    //Testting
+    private boolean imageCheck=false,ratingCheck=false;
 
 
     public static CreatePost newInstance() {
@@ -125,6 +126,7 @@ public class CreatePost extends Fragment  {
 
         //Addind Spinner
         spinner=(Spinner)view.findViewById(R.id.locality_spinner);
+        subLocality=(Spinner)view.findViewById(R.id.locality_spinner2);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.location_array, android.R.layout.simple_spinner_item);
@@ -136,12 +138,27 @@ public class CreatePost extends Fragment  {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                locality = ""+parent.getItemAtPosition(position);
+                String s = ""+parent.getItemAtPosition(position);
+                locality = s;
+                populateSubSpinner(s);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                locality = "Null";
+
+                locality = "Other";
+            }
+        });
+
+        subLocality.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                sloc=""+parent.getItemAtPosition(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                sloc="Other";
             }
         });
 
@@ -174,11 +191,39 @@ public class CreatePost extends Fragment  {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 myrating =  rating;
+                ratingCheck=true;
+
             }
+
+
         });
 
         return view;
 
+    }
+
+    void populateSubSpinner(String s){
+        ArrayAdapter<CharSequence> adapter ;
+        switch (s){
+            case "Delhi":
+                adapter = ArrayAdapter.createFromResource(getContext(),
+                        R.array.Delhi_L, android.R.layout.simple_spinner_item);
+                break;
+            case "Noida":
+                adapter = ArrayAdapter.createFromResource(getContext(),
+                        R.array.Noida_L, android.R.layout.simple_spinner_item);
+                break;
+            case "Greater Noida":
+                adapter = ArrayAdapter.createFromResource(getContext(),
+                        R.array.GNoida_L, android.R.layout.simple_spinner_item);
+                break;
+            default:
+                adapter = ArrayAdapter.createFromResource(getContext(),
+                        R.array.Other, android.R.layout.simple_spinner_item);
+                break;
+        }
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        subLocality.setAdapter(adapter);
     }
 
 
@@ -227,7 +272,7 @@ public class CreatePost extends Fragment  {
 //                    title = titletxt.getText().toString();
 //                    myprice = Integer.parseInt(price.getText().toString());
 //                    recom = recommendation.getText().toString();
-                    MyPost post = new MyPost(postId,name,myprice,postImageUrl,storyText,title,userID,myrating,locality,food_type,recom,myAddress);
+                    MyPost post = new MyPost(postId,name,myprice,postImageUrl,storyText,title,userID,myrating,locality,food_type,recom,myAddress,sloc);
 
                     mDatabase.setValue(post);
 
@@ -301,6 +346,7 @@ public class CreatePost extends Fragment  {
             if (resultCode == RESULT_OK) {
                  uri = result.getUri();
                 imageView.setImageURI(uri);
+                imageCheck=true;
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
@@ -327,6 +373,11 @@ class MyPost {
     public String locality;
     public String food_type;
     public String recommendation;
+    public String sloc;
+
+    public String getSloc() {
+        return sloc;
+    }
 
     public String getAddress() {
         return address;
@@ -376,7 +427,7 @@ class MyPost {
     }
 
     public MyPost(String postId, String author, int price, String postImageUrl, String description, String title, String userID, Object rating, String locality
-        , String food_type, String recommendation,String address) {
+        , String food_type, String recommendation,String address,String sloc) {
         this.postId = postId;
         this.author = author;
         this.price = price;
@@ -389,5 +440,6 @@ class MyPost {
         this.food_type = food_type;
         this.recommendation = recommendation;
         this.address=address;
+        this.sloc=sloc;
     }
 }
