@@ -7,6 +7,7 @@ import android.content.Intent;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 
 import android.os.Bundle;
@@ -20,6 +21,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
@@ -33,6 +36,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +57,12 @@ public class StoryPage extends Fragment{
     private BottomNavigation bottomNavigation;
 
     private FragmentActivity myContext;
+    private RecyclerView.LayoutManager layoutManager;
+    private FloatingActionButton mButton;
+
+    private Animation hide_fab_1,show_fab_1;
+
+    int current=0,ITEM_LIMIT=10;
 
 
     @Override
@@ -60,14 +71,35 @@ public class StoryPage extends Fragment{
 
         final View view =  inflater.inflate(R.layout.activity_story_page, container, false);
 
+         show_fab_1 = AnimationUtils.loadAnimation(getContext(), R.anim.fab1_show);
+        hide_fab_1 = AnimationUtils.loadAnimation(getContext(), R.anim.fab1_hide);
 
         progressBar=(ProgressBar)view.findViewById(R.id.progressBar2);
+        mButton=(FloatingActionButton) view.findViewById(R.id.showMore);
+        mButton.setVisibility(View.INVISIBLE);
+        arr=new ArrayList<>();
+        shadow = new ArrayList<>();
 
         recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);
         recyclerView.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
 
         recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(getContext());
+
+
+
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mButton.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.GONE);
+                current++;
+                mButton.startAnimation(hide_fab_1);
+                mButton.setClickable(false);
+                loadData();
+            }
+        });
 
         setHasOptionsMenu(true);
 //        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
@@ -118,8 +150,36 @@ public class StoryPage extends Fragment{
         });
 
 
+//        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("posts");
+//        ref.limitToLast(20).addListenerForSingleValueEvent(
+//                new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        //Get map of users in datasnapshot
+//                        collectPhoneNumbers((Map<String,Object>) dataSnapshot.getValue());
+//                        if(!arr.isEmpty())
+//                            mAdapter.notifyDataSetChanged();
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//                        //handle databaseError
+//                    }
+//                });
+
+        loadData();
+
+        return view;
+    }
+
+    void loadData(){
+
+
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("posts");
-        ref.limitToLast(20).addListenerForSingleValueEvent(
+        ref.limitToFirst(ITEM_LIMIT)
+                .startAt(current*ITEM_LIMIT)
+                .orderByChild("mvalue")
+                .addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -134,12 +194,6 @@ public class StoryPage extends Fragment{
                         //handle databaseError
                     }
                 });
-
-        return view;
-    }
-
-    void loadData(){
-
     }
 
     @Override
@@ -178,8 +232,7 @@ public class StoryPage extends Fragment{
 
 
         //ArrayList<String> phoneNumbers = new ArrayList<>();
-        arr=new ArrayList<>();
-        shadow = new ArrayList<>();
+
         if(users == null){
 //            arr.add(new MyPost("qwerty","Unkknown",0,"qazxswedcvfrtb","Null","Null","Null",0,"Null","Null",
 //                    "Null"));
@@ -204,18 +257,21 @@ public class StoryPage extends Fragment{
             String recommendation = (String)singleUser.get("recommendation");
             String loc = (String)singleUser.get("address");
             String sloc = (String)singleUser.get("sloc");
-            arr.add(new MyPost(postId,author,price,postImageUrl,description,title,userID,rating,locality,food_type,recommendation,loc,sloc));
-            shadow.add(new MyPost(postId,author,price,postImageUrl,description,title,userID,rating,locality,food_type,recommendation,loc,sloc));
+            arr.add(new MyPost(postId,author,price,postImageUrl,description,title,userID,rating,locality,food_type,recommendation,loc,sloc,0));
+            shadow.add(new MyPost(postId,author,price,postImageUrl,description,title,userID,rating,locality,food_type,recommendation,loc,sloc,0));
 
         }
 
+        Collections.reverse(arr);
+        Collections.reverse(shadow);
 
+        mButton.startAnimation(show_fab_1);
+        mButton.setClickable(true);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-
+        mButton.setVisibility(View.VISIBLE);
         mAdapter = new PostAdapter(arr);
         recyclerView.setAdapter(mAdapter);
         progressBar.setVisibility(View.GONE);

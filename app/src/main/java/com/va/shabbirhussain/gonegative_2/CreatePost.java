@@ -41,8 +41,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -78,6 +83,7 @@ public class CreatePost extends Fragment  {
     ProgressBar progressBar;
     float myrating = 0;
     private FragmentActivity myContext;
+    int mCount;
 
     //Testting
     private boolean imageCheck=false,ratingCheck=false;
@@ -182,37 +188,42 @@ public class CreatePost extends Fragment  {
             public void onClick(View v) {
                 //new mySubmit().execute()
 
-                if((txt.getText().toString().matches(""))||(titletxt.getText().toString().matches(""))
+                if((txt.getText().toString().matches(""))||
+                        (titletxt.getText().toString().matches(""))
                         ||(price.getText().toString().matches(""))
                         ||(recommendation.getText().toString().matches(""))
                         ||(address.getText().toString().matches(""))){
                     Toast.makeText(getContext(),"All fields are not filled,fill before submitting",Toast.LENGTH_SHORT).show();
-                }else  if(!imageCheck){
-                    Toast.makeText(getContext(),"Image is not selected",Toast.LENGTH_SHORT).show();
+                }else if( (titletxt.getText().toString().matches(""))){
+                    Toast.makeText(getContext(),"Title is not filled",Toast.LENGTH_SHORT).show();
+                }else if((txt.getText().toString().matches(""))){
+                    Toast.makeText(getContext(),"Description is not filled",Toast.LENGTH_SHORT).show();
+                }else if((price.getText().toString().matches(""))){
+                    Toast.makeText(getContext(),"Price is not filled",Toast.LENGTH_SHORT).show();
+                }else if((recommendation.getText().toString().matches(""))){
+                    Toast.makeText(getContext(),"Recommendation is not filled",Toast.LENGTH_SHORT).show();
+                }else if((address.getText().toString().matches(""))){
+                    Toast.makeText(getContext(),"Address is not filled",Toast.LENGTH_SHORT).show();
                 }else if(!ratingCheck){
                     Toast.makeText(getContext(),"Raring is not filled",Toast.LENGTH_SHORT).show();
                 }else{
+                    final DatabaseReference upvotesRef = database.getReference("mvalue");
+                    upvotesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            mCount = dataSnapshot.getValue(Integer.class);
+                            upvotesRef.setValue(mCount+1);
+                            mCount++;
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                     new Demo().execute();
                     progressBar.setVisibility(View.VISIBLE);
                 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             }
         });
 
@@ -273,6 +284,8 @@ public class CreatePost extends Fragment  {
         @Override
         protected Void doInBackground(Void... voids) {
 
+
+//
             //Posting image
             imageView.setDrawingCacheEnabled(true);
             imageView.buildDrawingCache();
@@ -302,7 +315,8 @@ public class CreatePost extends Fragment  {
 //                    title = titletxt.getText().toString();
 //                    myprice = Integer.parseInt(price.getText().toString());
 //                    recom = recommendation.getText().toString();
-                    MyPost post = new MyPost(postId,name,myprice,postImageUrl,storyText,title,userID,myrating,locality,food_type,recom,myAddress,sloc);
+                    MyPost post = new MyPost(postId,name,myprice,postImageUrl,storyText,title,userID,myrating,locality,
+                            food_type,recom,myAddress,sloc,mCount);
 
                     mDatabase.setValue(post);
 
@@ -404,6 +418,7 @@ class MyPost {
     public String food_type;
     public String recommendation;
     public String sloc;
+    public int mCount;
 
     public String getSloc() {
         return sloc;
@@ -457,7 +472,7 @@ class MyPost {
     }
 
     public MyPost(String postId, String author, int price, String postImageUrl, String description, String title, String userID, Object rating, String locality
-        , String food_type, String recommendation,String address,String sloc) {
+        , String food_type, String recommendation,String address,String sloc,int mCount) {
         this.postId = postId;
         this.author = author;
         this.price = price;
@@ -471,5 +486,6 @@ class MyPost {
         this.recommendation = recommendation;
         this.address=address;
         this.sloc=sloc;
+        this.mCount=mCount;
     }
 }

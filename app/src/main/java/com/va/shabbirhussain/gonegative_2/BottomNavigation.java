@@ -72,6 +72,8 @@ public class BottomNavigation extends AppCompatActivity {
                                 break;
                         }
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.setCustomAnimations(R.anim.fab1_showc, R.anim.fab1_hidec);
+
                         transaction.replace(R.id.frame_layout, selectedFragment);
                         transaction.commit();
                         return true;
