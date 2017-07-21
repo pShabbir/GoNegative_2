@@ -181,8 +181,38 @@ public class CreatePost extends Fragment  {
             @Override
             public void onClick(View v) {
                 //new mySubmit().execute()
+
+                if((txt.getText().toString().matches(""))||(titletxt.getText().toString().matches(""))
+                        ||(price.getText().toString().matches(""))
+                        ||(recommendation.getText().toString().matches(""))
+                        ||(address.getText().toString().matches(""))){
+                    Toast.makeText(getContext(),"All fields are not filled,fill before submitting",Toast.LENGTH_SHORT).show();
+                }else  if(!imageCheck){
+                    Toast.makeText(getContext(),"Image is not selected",Toast.LENGTH_SHORT).show();
+                }else if(!ratingCheck){
+                    Toast.makeText(getContext(),"Raring is not filled",Toast.LENGTH_SHORT).show();
+                }else{
                     new Demo().execute();
                     progressBar.setVisibility(View.VISIBLE);
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             }
         });
 

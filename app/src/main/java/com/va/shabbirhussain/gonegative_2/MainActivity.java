@@ -286,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(aVoid);
             Intent i=new Intent(MainActivity.this,BottomNavigation.class);
             startActivity(i);
-            Toast.makeText(getApplicationContext(),"Kuch to gadbad hai daya",Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(),"Kuch to gadbad hai daya",Toast.LENGTH_LONG).show();
         }
     }
 

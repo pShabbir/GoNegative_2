@@ -113,18 +113,7 @@ public class StoryPage extends Fragment{
                 i.putExtra("recom",myPost.getRecommendation()+"");
                 i.putExtra("address",myPost.getAddress());
                 getActivity().startActivity(i);
-//
-//                FragmentManager fragmentManager = myContext.getFragmentManager();
-//                DescriptionDialogue descriptionDialogue = new DescriptionDialogue();
-//                Bundle f=new Bundle();
-//                f.putString("desc",myPost.getDescription());
-//                f.putString("uri",myPost.getPostImageUrl());
-//                f.putString("cost",myPost.getPrice()+"");
-//                f.putString("rating",myPost.getRating()+"");
-//                f.putString("locality",myPost.getLocality());
-//                f.putString("recom",myPost.getRecommendation());
-//                descriptionDialogue.setArguments(f);
-//                descriptionDialogue.show(fragmentManager,"This is PopTime");
+
             }
         });
 
@@ -147,6 +136,10 @@ public class StoryPage extends Fragment{
                 });
 
         return view;
+    }
+
+    void loadData(){
+
     }
 
     @Override
