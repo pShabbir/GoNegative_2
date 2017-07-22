@@ -188,16 +188,10 @@ public class CreatePost extends Fragment  {
             public void onClick(View v) {
                 //new mySubmit().execute()
 
-                if((txt.getText().toString().matches(""))||
-                        (titletxt.getText().toString().matches(""))
-                        ||(price.getText().toString().matches(""))
-                        ||(recommendation.getText().toString().matches(""))
-                        ||(address.getText().toString().matches(""))){
-                    Toast.makeText(getContext(),"All fields are not filled,fill before submitting",Toast.LENGTH_SHORT).show();
+                if((txt.getText().toString().matches(""))){
+                    Toast.makeText(getContext(),"Description is not filled",Toast.LENGTH_SHORT).show();
                 }else if( (titletxt.getText().toString().matches(""))){
                     Toast.makeText(getContext(),"Title is not filled",Toast.LENGTH_SHORT).show();
-                }else if((txt.getText().toString().matches(""))){
-                    Toast.makeText(getContext(),"Description is not filled",Toast.LENGTH_SHORT).show();
                 }else if((price.getText().toString().matches(""))){
                     Toast.makeText(getContext(),"Price is not filled",Toast.LENGTH_SHORT).show();
                 }else if((recommendation.getText().toString().matches(""))){

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -102,6 +103,8 @@ public class StoryPage extends Fragment{
         });
 
         setHasOptionsMenu(true);
+
+
 //        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
 //            @Override
 //            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
